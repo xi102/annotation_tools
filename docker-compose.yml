@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  frontend:
+    image: annotation-frontend:latest
+    container_name: annotation-frontend
+    ports:
+      - 80:80
+    networks:
+      - annotation-nets
+
+  backend:
+    image: annotation-backend:latest
+    container_name: annotation-backend
+    ports:
+      - 5000:5000
+    networks:
+      - annotation-nets
+
+  db:
+    image: mysql:5
+    container_name: annotation-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=Password
+    ports:
+      - 3306:3306
+    volumes:
+      - "/srv/mysql:/var/lib/mysql"
+    networks:
+      - annotation-nets
+
+networks:
+  annotation-nets:
+

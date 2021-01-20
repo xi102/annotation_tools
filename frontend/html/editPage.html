@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>实体标注工具</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/editPage.css">
+    <script src="../js/jquery-1.11.3.min.js"></script>
+    <script src="../js/bootstrap.js"></script>
+    <script src="../js/angular.js"></script>
+    <!--<script src="../js/FileSaver.js"></script>-->
+</head>
+<body ng-view>
+<div style="margin: 20px;">
+    <div ng-app="app" ng-controller="table">
+        <div>
+            <h3 id="hello"></h3>
+            <button id="logout">注销</button>
+        </div>
+
+        <h4>电子病历实体标注</h4>
+        <!--<button ng-click="test()">TEST</button>-->
+        <div class="row">
+            <div class="col-lg-7 col-md-8">
+                <div>
+                    <input type="file" id="readFile" class="hide"
+                           onchange="angular.element(this).scope().readFile()">
+                    <!--<button class="btn-success" id="importFile">本地导入</button>-->
+                    <button class="btn-success" id="loadFile" ng-click="loadFile()">导入病历</button>
+                    <button class="btn-success" id="loadEntity" ng-click="loadEntity()">导入实体
+                    </button>
+                    <input type="number" class="input-sm" style="width: 80px;" maxlength="8"
+                           id="fileId" value="1">
+                    <button class="btn-danger" ng-click="addEntity()">添加实体</button>
+                </div>
+                <div>
+                    <textarea id="content" class="form-control" readonly></textarea>
+                    <ul style="float: right; list-style: none ;">
+                        <li><span style="background-color: orange;" class="sign"></span>疾病</li>
+                        <li><span style="background-color: plum;" class="sign"></span>症状</li>
+                        <li><span style="background-color: #2e6da4;" class="sign"></span>异常检查结果</li>
+                        <li><span style="background-color: #ac2925 ;" class="sign"></span>检查</li>
+                        <li><span style="background-color: #ce8483 ;" class="sign"></span>治疗</li>
+                        <li><span style="background-color: aqua ;" class="sign"></span>身体部位</li>
+                        <li><span style="background-color: darkmagenta ;" class="sign"></span>时间</li>
+                    </ul>
+                    <div id="content2" onselectstart="return false" ng-show="aa"></div><!--禁止光标选中-->
+                    <div id="content3" onselectstart="return false" ng-hide="aa"></div><!--禁止光标选中-->
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-4" style="position: relative;height: 600px;">
+                <div style="height: 90%;position:absolute;left: 0;right: -17px;bottom: 0;top: -0px;overflow-x: hidden;overflow-y:scroll;">
+                    <table class="table table-responsive" style="margin: 0px;">
+                        <tr>
+                            <td>实体</td>
+                            <td>开始位置</td>
+                            <td>结束位置</td>
+                            <td>类别</td>
+                            <td>修饰</td>
+                            <td ng-show="showNums">次数</td>
+                            <td>编辑</td>
+                        </tr>
+                        <tr ng-repeat="x in entityList" class="item">
+                            <td>{{x.name}}</td>
+                            <td class="pos_b">{{x.startPosition}}</td>
+                            <td class="pos_e">{{x.endPosition}}</td>
+                            <td>
+                                <select ng-change="change()" ng-model="selectValue" class="form-control" ng-hide="!sel">
+                                    <option ng-repeat="xx in categories" value="{{xx}}">{{xx}}
+                                    </option>
+                                </select>
+                                <span ng-show="!sel" class="category">{{x.category}}</span>
+                            </td>
+                            <td>
+                                <select ng-model="selectExtr" class="form-control" ng-hide="!sel"  ng-change="change_extr()">
+                                    <option ng-repeat="xx in x.category_optinons" value="{{xx}}">{{xx}}</option>
+                                </select>
+                                <span ng-show="!sel" class="extr_info">{{x.decoration}}</span>
+                            </td>
+                            <td ng-show="showNums">{{x.nums}}</td>
+                            <td>
+                                <button class="btn-default" ng-click="removeEntity()">删除</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="position:absolute;bottom: 0;">
+                    <!--<button ng-click="exportEntity()" class="btn-success">导出到本地</button>-->
+                    <button ng-click="refreshEntity()" class="btn-danger" ng-show="allowEdit">修改实体
+                    </button>
+                    <button ng-click="pushToDB()" class="btn-success" id="push">更新到数据库</button>
+                    <button ng-click="pushChecked()" class="btn-default" id="refresh">更新到数据库</button>
+                    <button ng-click="reviewEntity()" class="btn-default">审核</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/editPage.js"></script>
+</body>
+</html>
